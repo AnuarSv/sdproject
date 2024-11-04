@@ -1,27 +1,40 @@
+# commands/concrete_commands.py
 from aiogram.types import Message
-from aiogram import Router
+from base import BaseCommand
+from Gemini import GeminiService
+from requestsDB import HistoryService
+from texts import help
+from keyboard import reply_kb
 
-router = Router()
-
-class StartCommand:
+class HelpCommand(BaseCommand):
     async def execute(self, message: Message):
-        await message.answer("Hello! I am Astana IT University Bot")
+        await message.answer(help, reply_markup=reply_kb)
 
-class HelpCommand:
-    async def execute(self, message: Message):
-        help_text = '''🤖 Astana IT University Chatbot Help
-        How to Use the Bot:
-        - Start: Type "Hello!" to begin the conversation.
-        - Ask Questions on topics such as Admission requirements, Scholarship applications, etc.
-        '''
-        await message.answer(help_text)
 
-class HistoryCommand:
-    async def execute(self, message: Message):
-        history = await rq.get_history(message.from_user.id)
-        await message.answer(history if history else "No history available.")
+class HistoryCommand(BaseCommand):
+    def __init__(self, history_service: HistoryService):
+        self.history_service = history_service
 
-class DeleteHistoryCommand:
     async def execute(self, message: Message):
-        await rq.delete_history(message.from_user.id)
-        await message.answer("History deleted successfully.")
+        history = await self.history_service.get_history(message.from_user.id)
+        await message.answer(history or "No history found.", reply_markup=reply_kb)
+
+class DeleteHistoryCommand(BaseCommand):
+    def __init__(self, history_service: HistoryService):
+        self.history_service = history_service
+
+    async def execute(self, message: Message):
+        await self.history_service.delete_history(message.from_user.id)
+        await message.answer("History deleted.", reply_markup=reply_kb)
+
+class DefaultCommand(BaseCommand):
+    def __init__(self, gemini_service: GeminiService, history_service: HistoryService):
+        self.gemini_service = gemini_service
+        self.history_service = history_service
+
+    async def execute(self, message: Message):
+        history = await self.history_service.get_history(message.from_user.id)
+        response = await self.gemini_service.get_response(message.text, history)
+        await self.history_service.save_history(message.from_user.id, f"{message.text}\n{response}")
+        # print(f"{message.text}\n{response}")
+        await message.answer(response, reply_markup=reply_kb)

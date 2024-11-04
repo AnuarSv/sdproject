@@ -1,3 +1,5 @@
 BOT_TOKEN = '7826562871:AAEiJKxTcFQNlmhwXFLROMNDl3ys9w1b3mI'
 
 GEMINI_API = 'AIzaSyBUWSDHWMD3Q3S2jcgOESoIlL4sLjrLnZk'
+
+DATABASE_URL = 'sqlite+aiosqlite:///db.sqlite3'

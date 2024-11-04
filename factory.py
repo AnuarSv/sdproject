@@ -1,6 +1,7 @@
 from aiogram import Bot, Dispatcher
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from config import BOT_TOKEN
+from models import Base
 
 
 class Factory:
@@ -10,6 +11,10 @@ class Factory:
 
         self.engine = create_async_engine('sqlite+aiosqlite:///db.sqlite3')
         self.async_session = async_sessionmaker(self.engine, expire_on_commit=False)
+
+    async def setup_database(self):
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
     def get_bot(self):
         return self.bot

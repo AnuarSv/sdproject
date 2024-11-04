@@ -1,12 +1,14 @@
 class ResponseStrategy:
-    async def generate_response(self, message: Message, history: str):
-        pass
+    def get_response(self, message_text: str) -> str:
+        raise NotImplementedError
 
-class HistoryResponseStrategy(ResponseStrategy):
-    async def generate_response(self, message: Message, history: str):
-        return history if history else "No history available."
+class StandardResponseStrategy(ResponseStrategy):
+    def get_response(self, message_text: str) -> str:
+        return f"Ответ на ваш запрос: {message_text}"
 
-class GPTResponseStrategy(ResponseStrategy):
-    async def generate_response(self, message: Message, history: str):
-        response = await gpt(message.text, history)
-        return response
+class ResponseStrategyContext:
+    def __init__(self, strategy: ResponseStrategy):
+        self.strategy = strategy
+
+    def get_response(self, message_text: str) -> str:
+        return self.strategy.get_response(message_text)

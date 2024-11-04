@@ -4,10 +4,12 @@ from base import BaseCommand
 from Gemini import GeminiService
 from requestsDB import HistoryService
 from texts import help
+from keyboard import reply_kb
 
 class HelpCommand(BaseCommand):
     async def execute(self, message: Message):
-        await message.answer(help)
+        await message.answer(help, reply_markup=reply_kb)
+
 
 class HistoryCommand(BaseCommand):
     def __init__(self, history_service: HistoryService):
@@ -15,7 +17,7 @@ class HistoryCommand(BaseCommand):
 
     async def execute(self, message: Message):
         history = await self.history_service.get_history(message.from_user.id)
-        await message.answer(history or "No history found.")
+        await message.answer(history or "No history found.", reply_markup=reply_kb)
 
 class DeleteHistoryCommand(BaseCommand):
     def __init__(self, history_service: HistoryService):
@@ -23,7 +25,7 @@ class DeleteHistoryCommand(BaseCommand):
 
     async def execute(self, message: Message):
         await self.history_service.delete_history(message.from_user.id)
-        await message.answer("History deleted.")
+        await message.answer("History deleted.", reply_markup=reply_kb)
 
 class DefaultCommand(BaseCommand):
     def __init__(self, gemini_service: GeminiService, history_service: HistoryService):
@@ -34,4 +36,5 @@ class DefaultCommand(BaseCommand):
         history = await self.history_service.get_history(message.from_user.id)
         response = await self.gemini_service.get_response(message.text, history)
         await self.history_service.save_history(message.from_user.id, f"{message.text}\n{response}")
-        await message.answer(response)
+        # print(f"{message.text}\n{response}")
+        await message.answer(response, reply_markup=reply_kb)

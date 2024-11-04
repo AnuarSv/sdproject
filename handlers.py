@@ -1,9 +1,9 @@
 from aiogram import F, Router
+from aiogram.filters import CommandStart
 from aiogram.types import Message
 from commands import HelpCommand, HistoryCommand, DeleteHistoryCommand, DefaultCommand
 from requestsDB import HistoryService
 from Gemini import GeminiService
-import keyboard as kb
 
 router = Router()
 

@@ -24,3 +24,7 @@ class Factory:
 
     def get_session(self):
         return self.async_session()
+
+    async def close(self):
+        await self.bot.session.close()
+        await self.engine.dispose()

@@ -1,5 +1,5 @@
-BOT_TOKEN = '7826562871:AAEiJKxTcFQNlmhwXFLROMNDl3ys9w1b3mI'
+BOT_TOKEN = 'TG-TOKEN'
 
-GEMINI_API = 'AIzaSyBUWSDHWMD3Q3S2jcgOESoIlL4sLjrLnZk'
+GEMINI_API = 'Gemini-API'
 
 DATABASE_URL = 'sqlite+aiosqlite:///db.sqlite3'

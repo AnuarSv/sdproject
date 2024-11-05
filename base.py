@@ -5,3 +5,4 @@ class BaseCommand(ABC):
     @abstractmethod
     async def execute(self, message: Message):
         pass
+

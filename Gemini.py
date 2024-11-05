@@ -11,7 +11,8 @@ class GeminiService:
         model = genai.GenerativeModel(model_name="gemini-1.5-flash", generation_config=self.generation_config,
                                       system_instruction=purpose + rules)
         try:
-            response = await model.generate_content_async([f'Data: {dataAITU}, History: {history}\n\nUser question: {question}'])
+            response = await model.generate_content_async([f'GIVE CLEAR SHORT ANSWER.\n\nData: {dataAITU}, History: {history}\n\nUser question: {question}'])
             return response.text
         except Exception as e:
             return 'ERROR: ' + str(e)
+        

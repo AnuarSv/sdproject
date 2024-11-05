@@ -1,4 +1,3 @@
-# commands/concrete_commands.py
 from aiogram.types import Message
 from base import BaseCommand
 from Gemini import GeminiService

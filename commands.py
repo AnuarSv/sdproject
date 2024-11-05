@@ -34,6 +34,6 @@ class DefaultCommand(BaseCommand):
     async def execute(self, message: Message):
         history = await self.history_service.get_history(message.from_user.id)
         response = await self.gemini_service.get_response(message.text, history)
-        await self.history_service.save_history(message.from_user.id, f"{message.text}\n{response}")
+        await self.history_service.save_history(message.from_user.id, f"USER: {message.text}\nGemini: {response}")
         # print(f"{message.text}\n{response}")
-        await message.answer(response, reply_markup=reply_kb)
+        await message.reply(response)

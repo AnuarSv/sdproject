@@ -10,6 +10,10 @@ router = Router()
 history_service = HistoryService()
 gemini_service = GeminiService()
 
+@router.message(CommandStart())
+async def cmd_help(message: Message):
+    await HelpCommand().execute(message)
+
 @router.message(F.text == 'Help❔️')
 async def cmd_help(message: Message):
     await HelpCommand().execute(message)

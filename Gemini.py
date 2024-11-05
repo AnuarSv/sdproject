@@ -1,6 +1,6 @@
 import google.generativeai as genai
 from config import GEMINI_API
-from texts import purpose, dataAITU, rules
+from texts import purpose, dataAITU
 
 class GeminiService:
     def __init__(self):
@@ -9,10 +9,11 @@ class GeminiService:
 
     async def get_response(self, question: str, history: str) -> str:
         model = genai.GenerativeModel(model_name="gemini-1.5-flash", generation_config=self.generation_config,
-                                      system_instruction=purpose + rules)
+                                      system_instruction=purpose)
         try:
-            response = await model.generate_content_async([f'GIVE CLEAR SHORT ANSWER.\n\nData: {dataAITU}, History: {history}\n\nUser question: {question}'])
+            #print(history)
+            response = await model.generate_content_async([f'GIVE CLEAR SHORT ANSWER. Depennding on USER question answer this language!\n\nData about AITU: {dataAITU}, READ: History of previous user answer: {history}\n\nNOW answer User question: {question}'])
             return response.text
         except Exception as e:
             return 'ERROR: ' + str(e)
-        
+
